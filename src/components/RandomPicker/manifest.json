@@ -1,0 +1,211 @@
+{
+  "displayName": "Random Picker",
+  "defaultWidth": 160,
+  "defaultHeight": 96,
+  "resizeX": true,
+  "resizeY": true,
+  "components": "./index.js",
+  "icon": "./example-thumbnail.png",
+  "props": [
+    {
+      "name": "listOfDataSource",
+      "displayName": "Data Source",
+      "helpText": "One of the items will be picked up randomly.",
+      "type": "list"
+    },
+    {
+      "name": "itemOfDataSourceList",
+      "displayName": "Item of Data Source",
+      "helpText": "You can concatenate items as you like.",
+      "type": "text",
+      "role": "listItem",
+      "reference": "listOfDataSource"
+    },
+    {
+      "name": "enableNotFoundText",
+      "displayName": "Set a default Not Found text?",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "name": "notFoundText",
+      "displayName": "Not Found Text",
+      "helpText": "Set a default 'Not Found' text when there is no available item in your list. (Default: 'Not Found')",
+      "type": "text",
+      "enabled": {
+        "enableNotFoundText": true
+      }
+    },
+    {
+      "name": "enablePreviewDemoText",
+      "displayName": "Set a default Preview Demo text?",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "name": "previewDemoText",
+      "displayName": "Preview Demo Text",
+      "helpText": "Set a Preview Demo text. This is only used in editor. (Default: 'Preview demo')",
+      "type": "text",
+      "enabled": {
+        "enablePreviewDemoText": true
+      }
+    }
+    ],
+    "childComponents": [
+      {
+        "name": "actionSettings",
+        "displayName": "Action Settings",
+        "props": [
+          {
+            "name": "enableClickRefresh",
+            "displayName": "Enable Click Refresh?",
+            "helpText": "Refresh an item when this component is clicked. You cannot have both 'Click Actions' and 'Click Refresh'.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "clickActions",
+            "displayName": "Click Actions",
+            "helpText": "The actions will be triggered when this component is clicked.",
+            "type": "action",
+            "arguments": [
+              {
+                "type": "text",
+                "displayName": "Random Item"
+              }
+            ],
+            "enabled": {
+              "enableClickRefresh": false
+            }
+          }
+        ]
+      },
+      {
+        "name": "styleOptions",
+        "displayName": "Style Options",
+        "props": [
+          {
+            "name": "textSize",
+            "displayName": "Text Size",
+            "type": "number",
+            "default": 15,
+            "control": {
+              "type": "slider",
+              "min": 1,
+              "max": 80
+            }
+          },
+          {
+            "name": "textColor",
+            "displayName": "Text Color",
+            "type": "color",
+            "default": "@primary"
+          },
+          {
+            "name": "backgroundColor",
+            "displayName": "Background Color",
+            "type": "color",
+            "default": "@contrast:textColor"
+          },
+          {
+            "name": "enableTextBold",
+            "displayName": "Enable Bold text?",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "textPadding",
+            "displayName": "Padding",
+            "helpText": "This will set padding inside a border. This will be active regardless of whether the border is visible or not.",
+            "type": "number",
+            "default": 10,
+            "control": {
+              "type": "slider",
+              "min": 0,
+              "max": 30
+            }
+          },
+          {
+            "name": "textTransform",
+            "displayName": "Capitalization",
+            "helpText": "Specify a capitalization in your text. You can see how it looks like: https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-transform",
+            "type": "text",
+            "default": "none",
+            "control": {
+              "type": "menu",
+              "options": [
+                { "label": "None", "value": "none" },
+                { "label": "Capitalize", "value": "capitalize" },
+                { "label": "Uppercase", "value": "uppercase" },
+                { "label": "Lowercase", "value": "lowercase" }
+              ]
+            }
+          },
+          {
+            "name": "borderWidth",
+            "displayName": "Border Width",
+            "type": "number",
+            "default": 1,
+            "control": {
+              "type": "slider",
+              "min": 0,
+              "max": 20
+            }
+          },
+          {
+            "name": "borderRadius",
+            "displayName": "Rounding",
+            "type": "number",
+            "default": 4,
+            "control": {
+              "type": "slider",
+              "min": 0,
+              "max": 20
+            }
+          },
+          {
+            "name": "borderColor",
+            "displayName": "Border Color",
+            "type": "color",
+            "default": "@primary"
+          },
+          {
+            "name": "borderStyle",
+            "displayName": "Border Style",
+            "helpText": "Specify a border style. You can see how it looks like: https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=solid",
+            "type": "text",
+            "default": "solid",
+            "control": {
+              "type": "menu",
+              "options": [
+                { "label": "Solid", "value": "solid" },
+                { "label": "Dotted", "value": "dotted" },
+                { "label": "Dashed", "value": "dashed" },
+                { "label": "Double", "value": "double" },
+                { "label": "Groove", "value": "groove" },
+                { "label": "Ridge", "value": "ridge" },
+                { "label": "Inset", "value": "inset" },
+                { "label": "Outset", "value": "outset" }
+              ]
+            }
+          },
+          {
+            "name": "wordBreak",
+            "displayName": "Line break",
+            "helpText": "Specify a line break. You can see how it looks like: https://developer.mozilla.org/en-US/docs/Web/CSS/word-break",
+            "type": "text",
+            "default": "normal",
+            "control": {
+              "type": "menu",
+              "options": [
+                { "label": "Normal", "value": "normal" },
+                { "label": "Break-word", "value": "break-word" },
+                { "label": "Break-all", "value": "break-all" }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+}
