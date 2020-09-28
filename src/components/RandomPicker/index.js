@@ -2,40 +2,67 @@ import React, { Component } from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 
 class RandomPicker extends Component {
-
   state = {
     title: "",
+    storedList: null,
   };
 
   setTargetTitleRandomly = (eventOrigin = "onLoad") => {
-    const { listOfDataSource, notFoundText, enableNotFoundText } = this.props;
+    const {
+      listOfDataSource,
+      notFoundText,
+      enableNotFoundText,
+      actionSettings: {
+        enableRemoveDuplicatesOnRefresh,
+        enableClickRefresh,
+        introText,
+      },
+    } = this.props;
     let targetText =
       enableNotFoundText && notFoundText ? notFoundText : "Not Found";
-    let maxNum, randomNumber, randomItem;
+    let maxNum, randomNum, randomItem, isTriggered;
 
-    if (listOfDataSource && listOfDataSource.length > 0) {
-      maxNum = listOfDataSource.length - 1 || 0;
-      randomNumber = Math.floor(Math.random() * maxNum);
-      randomItem = listOfDataSource[randomNumber].itemOfDataSourceList;
-      if (randomItem) targetText = randomItem;
+    if (!listOfDataSource) return null;
+
+    if (enableRemoveDuplicatesOnRefresh && this.state.storedList) {
+      if (this.state.storedList.length > 0) {
+        maxNum = this.state.storedList.length || 0;
+        randomNum = Math.floor(Math.random() * maxNum);
+        randomItem = this.state.storedList[randomNum].itemOfDataSourceList;
+      }
+    } else if (listOfDataSource.length > 0) {
+      maxNum = listOfDataSource.length || 0;
+      randomNum = Math.floor(Math.random() * maxNum);
+      randomItem = listOfDataSource[randomNum].itemOfDataSourceList;
     }
+
+    if (randomItem) targetText = randomItem;
 
     if (eventOrigin === "onLoad") {
       if (this.state.title === "") {
         this.setState({
-          title: targetText,
+          title: enableClickRefresh && introText ? introText : targetText,
         });
+        isTriggered = introText ? false : true;
       }
     } else {
       this.setState({
         title: targetText,
+      });
+      isTriggered = true;
+    }
+
+    if (isTriggered && randomNum > -1 && enableRemoveDuplicatesOnRefresh) {
+      const tempArray = this.state.storedList || listOfDataSource;
+      tempArray.splice(randomNum, 1);
+      this.setState({
+        storedList: tempArray,
       });
     }
   };
 
   triggerAction = () => {
     const { actionSettings } = this.props;
-
     if (actionSettings.enableClickRefresh) {
       this.setTargetTitleRandomly("onPress");
     } else if (actionSettings.clickActions) {
@@ -87,14 +114,15 @@ class RandomPicker extends Component {
     } = this.props;
 
     this.setTargetTitleRandomly();
-    const styles = StyleSheet.create({
+
+    const styles = {
       viewContainer: {
         width: _width,
         height: _height,
         display: "flex",
         alignItems: "center",
+        wordBreak: "break-all",
         justifyContent: "center",
-        wordBreak: styleOptions.wordBreak,
         borderWidth: styleOptions.borderWidth,
         borderColor: styleOptions.borderColor,
         borderStyle: styleOptions.borderStyle,
@@ -109,7 +137,7 @@ class RandomPicker extends Component {
         fontWeight: styleOptions.enableTextBold ? "bold" : "normal",
         textTransform: styleOptions.textTransform,
       },
-    });
+    };
 
     let viewGenre = "view";
     if (editor) {

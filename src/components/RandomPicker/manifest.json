@@ -60,9 +60,29 @@
           {
             "name": "enableClickRefresh",
             "displayName": "Enable Click Refresh?",
-            "helpText": "Refresh an item when this component is clicked. You cannot have both 'Click Actions' and 'Click Refresh'.",
+            "helpText": "Refresh an item when this component is clicked. You cannot have both 'Click Actions' and 'Click Refresh' at the same time due to avoiding unexpected behavior.",
             "type": "boolean",
             "default": false
+          },
+          {
+            "name": "enableRemoveDuplicatesOnRefresh",
+            "displayName": "Remove duplicates?",
+            "helpText": "Remove the item already shown from the list. This does not work when you refresh or move to a screen.",
+            "type": "boolean",
+            "default": false,
+            "enabled": {
+              "enableClickRefresh": true
+            }
+          },
+          {
+            "name": "introText",
+            "displayName": "Intro Text",
+            "helpText": "Set an intro message on the component before clicking. You can skip this message if you leave it as empty.",
+            "type": "text",
+            "default": "Click to Start!",
+            "enabled": {
+              "enableClickRefresh": true
+            }
           },
           {
             "name": "clickActions",
@@ -187,21 +207,6 @@
                 { "label": "Ridge", "value": "ridge" },
                 { "label": "Inset", "value": "inset" },
                 { "label": "Outset", "value": "outset" }
-              ]
-            }
-          },
-          {
-            "name": "wordBreak",
-            "displayName": "Line break",
-            "helpText": "Specify a line break. You can see how it looks like: https://developer.mozilla.org/en-US/docs/Web/CSS/word-break",
-            "type": "text",
-            "default": "normal",
-            "control": {
-              "type": "menu",
-              "options": [
-                { "label": "Normal", "value": "normal" },
-                { "label": "Break-word", "value": "break-word" },
-                { "label": "Break-all", "value": "break-all" }
               ]
             }
           }
