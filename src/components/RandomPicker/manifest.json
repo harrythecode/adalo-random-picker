@@ -5,7 +5,7 @@
   "resizeX": true,
   "resizeY": true,
   "components": "./index.js",
-  "icon": "./example-thumbnail.png",
+  "icon": "./thumbnail.png",
   "props": [
     {
       "name": "listOfDataSource",
@@ -97,16 +97,16 @@
             }
           },
           {
-            "name": "textColor",
-            "displayName": "Text Color",
+            "name": "backgroundColor",
+            "displayName": "Background Color",
             "type": "color",
             "default": "@primary"
           },
           {
-            "name": "backgroundColor",
-            "displayName": "Background Color",
+            "name": "textColor",
+            "displayName": "Text Color",
             "type": "color",
-            "default": "@contrast:textColor"
+            "default": "@contrast:backgroundColor"
           },
           {
             "name": "enableTextBold",
@@ -146,7 +146,7 @@
             "name": "borderWidth",
             "displayName": "Border Width",
             "type": "number",
-            "default": 1,
+            "default": 0,
             "control": {
               "type": "slider",
               "min": 0,

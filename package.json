@@ -1,10 +1,10 @@
 {
   "name": "random-picker",
   "description": "Pick randomly an item from your database and show it with custom styles.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "license": "MIT",
-  "author": "",
+  "author": "amezousan",
   "scripts": {
     "start": "adalo dev",
     "login": "adalo login",
@@ -12,7 +12,7 @@
     "prettier": "prettier --write *.js \"src/**/*.js\""
   },
   "adalo": {
-    "logo": "./example-logo.png",
+    "logo": "./logo.png",
     "displayName": "Random Picker",
     "components": [
       {
@@ -23,12 +23,11 @@
   },
   "devDependencies": {
     "@adalo/cli": "^0.0.40",
+    "prettier": "^2.1.2",
     "react": "^16.9.0",
     "react-art": "^16.6.0",
     "react-dom": "^16.9.0",
     "react-native-web": "^0.9.5"
   },
-  "dependencies": {
-    "prettier": "^2.1.2"
-  }
+  "dependencies": {}
 }

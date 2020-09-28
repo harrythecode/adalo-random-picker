@@ -2,36 +2,42 @@ import React, { Component } from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 
 class RandomPicker extends Component {
+
   state = {
     title: "",
   };
 
-  setTargetTitleRandomly = () => {
+  setTargetTitleRandomly = (eventOrigin = "onLoad") => {
     const { listOfDataSource, notFoundText, enableNotFoundText } = this.props;
     let targetText =
       enableNotFoundText && notFoundText ? notFoundText : "Not Found";
+    let maxNum, randomNumber, randomItem;
 
     if (listOfDataSource && listOfDataSource.length > 0) {
-      const maxNum = listOfDataSource.length - 1 || 0;
-      const randomNumber = Math.floor(Math.random() * maxNum);
-      const randomItem = listOfDataSource[randomNumber].itemOfDataSourceList;
+      maxNum = listOfDataSource.length - 1 || 0;
+      randomNumber = Math.floor(Math.random() * maxNum);
+      randomItem = listOfDataSource[randomNumber].itemOfDataSourceList;
       if (randomItem) targetText = randomItem;
     }
 
-    this.setState({
-      title: targetText,
-    });
+    if (eventOrigin === "onLoad") {
+      if (this.state.title === "") {
+        this.setState({
+          title: targetText,
+        });
+      }
+    } else {
+      this.setState({
+        title: targetText,
+      });
+    }
   };
-
-  componentDidMount() {
-    this.setTargetTitleRandomly();
-  }
 
   triggerAction = () => {
     const { actionSettings } = this.props;
 
     if (actionSettings.enableClickRefresh) {
-      this.setTargetTitleRandomly();
+      this.setTargetTitleRandomly("onPress");
     } else if (actionSettings.clickActions) {
       actionSettings.clickActions(this.state.title);
     }
@@ -80,6 +86,7 @@ class RandomPicker extends Component {
       editor,
     } = this.props;
 
+    this.setTargetTitleRandomly();
     const styles = StyleSheet.create({
       viewContainer: {
         width: _width,
