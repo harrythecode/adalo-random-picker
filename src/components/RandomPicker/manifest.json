@@ -209,21 +209,6 @@
                 { "label": "Outset", "value": "outset" }
               ]
             }
-          },
-          {
-            "name": "wordBreak",
-            "displayName": "Line break",
-            "helpText": "Specify a line break. You can see how it looks like: https://developer.mozilla.org/en-US/docs/Web/CSS/word-break",
-            "type": "text",
-            "default": "normal",
-            "control": {
-              "type": "menu",
-              "options": [
-                { "label": "Normal", "value": "normal" },
-                { "label": "Break-word", "value": "break-word" },
-                { "label": "Break-all", "value": "break-all" }
-              ]
-            }
           }
         ]
       }

@@ -43,7 +43,7 @@ class RandomPicker extends Component {
         this.setState({
           title: enableClickRefresh && introText ? introText : targetText,
         });
-        isTriggered = true;
+        isTriggered = introText ? false : true;
       }
     } else {
       this.setState({
@@ -114,14 +114,15 @@ class RandomPicker extends Component {
     } = this.props;
 
     this.setTargetTitleRandomly();
-    const styles = StyleSheet.create({
+
+    const styles = {
       viewContainer: {
         width: _width,
         height: _height,
         display: "flex",
         alignItems: "center",
+        wordBreak: "break-all",
         justifyContent: "center",
-        wordBreak: styleOptions.wordBreak,
         borderWidth: styleOptions.borderWidth,
         borderColor: styleOptions.borderColor,
         borderStyle: styleOptions.borderStyle,
@@ -136,7 +137,7 @@ class RandomPicker extends Component {
         fontWeight: styleOptions.enableTextBold ? "bold" : "normal",
         textTransform: styleOptions.textTransform,
       },
-    });
+    };
 
     let viewGenre = "view";
     if (editor) {

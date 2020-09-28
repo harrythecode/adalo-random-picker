@@ -1,7 +1,7 @@
 {
   "name": "random-picker",
   "description": "Pick randomly an item from your database and show it with custom styles.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "index.js",
   "license": "MIT",
   "author": "amezousan",
