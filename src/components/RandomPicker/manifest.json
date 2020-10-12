@@ -9,98 +9,84 @@
   "props": [
     {
       "name": "listOfDataSource",
-      "displayName": "Data Source",
+      "displayName": "Collection",
       "helpText": "One of the items will be picked up randomly.",
       "type": "list"
     },
     {
       "name": "itemOfDataSourceList",
-      "displayName": "Item of Data Source",
-      "helpText": "You can concatenate items as you like.",
+      "displayName": "Display Text",
       "type": "text",
       "role": "listItem",
       "reference": "listOfDataSource"
     },
     {
-      "name": "enableNotFoundText",
-      "displayName": "Set a default Not Found text?",
-      "type": "boolean",
-      "default": false
-    },
-    {
-      "name": "notFoundText",
-      "displayName": "Not Found Text",
-      "helpText": "Set a default 'Not Found' text when there is no available item in your list. (Default: 'Not Found')",
-      "type": "text",
-      "enabled": {
-        "enableNotFoundText": true
+      "name": "actionType",
+      "displayName": "What happens when the user clicks on the component?",
+      "type": "number",
+      "default": 10,
+      "control": {
+        "type": "menu",
+        "options": [
+          { "label": "Trigger Click Actions", "value": 10 },
+          { "label": "Refresh the component", "value": 20 }
+        ]
       }
     },
     {
-      "name": "enablePreviewDemoText",
-      "displayName": "Set a default Preview Demo text?",
-      "type": "boolean",
-      "default": false
+      "name": "clickActions",
+      "displayName": "Click Actions",
+      "helpText": "The actions will be triggered when the component is clicked.",
+      "type": "action",
+      "role": "listItem",
+      "reference": "listOfDataSource",
+      "arguments": [
+        {
+          "type": "text",
+          "displayName": "Random Item on Click"
+        }
+      ],
+      "enabled": {
+        "actionType": 10
+      }
     },
     {
-      "name": "previewDemoText",
-      "displayName": "Preview Demo Text",
-      "helpText": "Set a Preview Demo text. This is only used in editor. (Default: 'Preview demo')",
-      "type": "text",
+      "name": "enableRemoveDuplicatesOnRefresh",
+      "displayName": "Remove duplicates?",
+      "helpText": "Remove the item already shown from the list. When you refresh or move to a screen, it will reset all values.",
+      "type": "boolean",
+      "default": false,
       "enabled": {
-        "enablePreviewDemoText": true
+        "actionType": 20
+      }
+    },
+    {
+      "name": "introText",
+      "displayName": "Intro Text",
+      "helpText": "Set an intro message on the component before clicking. You can skip this message if you leave it as empty.",
+      "type": "text",
+      "default": "Click to Start!",
+      "enabled": {
+        "actionType": 20
+      }
+    },
+    {
+      "name": "refreshActions",
+      "displayName": "Actions after refresh",
+      "helpText": "The actions will be triggered after the component is refreshed.",
+      "type": "action",
+      "arguments": [
+        {
+          "type": "text",
+          "displayName": "Random Item on Refresh"
+        }
+      ],
+      "enabled": {
+        "actionType": 20
       }
     }
     ],
     "childComponents": [
-      {
-        "name": "actionSettings",
-        "displayName": "Action Settings",
-        "props": [
-          {
-            "name": "enableClickRefresh",
-            "displayName": "Enable Click Refresh?",
-            "helpText": "Refresh an item when this component is clicked. You cannot have both 'Click Actions' and 'Click Refresh' at the same time due to avoiding unexpected behavior.",
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "name": "enableRemoveDuplicatesOnRefresh",
-            "displayName": "Remove duplicates?",
-            "helpText": "Remove the item already shown from the list. This does not work when you refresh or move to a screen.",
-            "type": "boolean",
-            "default": false,
-            "enabled": {
-              "enableClickRefresh": true
-            }
-          },
-          {
-            "name": "introText",
-            "displayName": "Intro Text",
-            "helpText": "Set an intro message on the component before clicking. You can skip this message if you leave it as empty.",
-            "type": "text",
-            "default": "Click to Start!",
-            "enabled": {
-              "enableClickRefresh": true
-            }
-          },
-          {
-            "name": "clickActions",
-            "displayName": "Click Actions",
-            "helpText": "The actions will be triggered when this component is clicked.",
-            "type": "action",
-            "arguments": [
-              {
-                "type": "text",
-                "displayName": "Random Item"
-              }
-            ],
-            "enabled": {
-              "enableClickRefresh": false
-            }
-          }
-        ]
-      },
       {
         "name": "styleOptions",
         "displayName": "Style Options",
@@ -181,7 +167,7 @@
             "control": {
               "type": "slider",
               "min": 0,
-              "max": 20
+              "max": 150
             }
           },
           {
