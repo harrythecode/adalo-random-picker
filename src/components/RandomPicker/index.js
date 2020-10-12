@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 
 class RandomPicker extends Component {
   state = {
@@ -7,53 +7,67 @@ class RandomPicker extends Component {
     storedList: null,
   };
 
+  getRandomItem = (listData, maxNum = 0) => {
+    let res = { randomItem: "", randomNum: 0 };
+    if (listData.length > 0) {
+      const randomNum = Math.floor(Math.random() * maxNum);
+      const pickedItem = listData[randomNum].itemOfDataSourceList;
+      res = { randomItem: pickedItem, randomNum: randomNum };
+    }
+
+    return res;
+  };
+
   setTargetTitleRandomly = (eventOrigin = "onLoad") => {
     const {
+      introText,
+      actionType,
+      refreshActions,
       listOfDataSource,
-      notFoundText,
-      enableNotFoundText,
-      actionSettings: {
-        enableRemoveDuplicatesOnRefresh,
-        enableClickRefresh,
-        introText,
-      },
+      enableRemoveDuplicatesOnRefresh,
     } = this.props;
-    let targetText =
-      enableNotFoundText && notFoundText ? notFoundText : "Not Found";
-    let maxNum, randomNum, randomItem, isTriggered;
+
+    let randomNum, randomItem, isTriggered;
+    const storedList = this.state.storedList;
 
     if (!listOfDataSource) return null;
 
-    if (enableRemoveDuplicatesOnRefresh && this.state.storedList) {
-      if (this.state.storedList.length > 0) {
-        maxNum = this.state.storedList.length || 0;
-        randomNum = Math.floor(Math.random() * maxNum);
-        randomItem = this.state.storedList[randomNum].itemOfDataSourceList;
-      }
+    if (enableRemoveDuplicatesOnRefresh && storedList) {
+      const response = this.getRandomItem(storedList, storedList.length);
+      randomItem = response.randomItem;
+      randomNum = response.randomNum;
     } else if (listOfDataSource.length > 0) {
-      maxNum = listOfDataSource.length || 0;
-      randomNum = Math.floor(Math.random() * maxNum);
-      randomItem = listOfDataSource[randomNum].itemOfDataSourceList;
+      const response = this.getRandomItem(
+        listOfDataSource,
+        listOfDataSource.length
+      );
+      randomItem = response.randomItem;
+      randomNum = response.randomNum;
     }
 
-    if (randomItem) targetText = randomItem;
+    const targetText = randomItem || "Not Found";
 
     if (eventOrigin === "onLoad") {
+      // Initial Loading
       if (this.state.title === "") {
-        this.setState({
-          title: enableClickRefresh && introText ? introText : targetText,
-        });
-        isTriggered = introText ? false : true;
+        const initialText =
+          actionType === 20 && introText ? introText : targetText;
+        this.setState({ title: initialText });
+        if (actionType === 20 && refreshActions) {
+          refreshActions(initialText);
+        }
+        isTriggered = actionType === 20 && introText ? false : true;
       }
     } else {
-      this.setState({
-        title: targetText,
-      });
+      this.setState({ title: targetText });
+      if (actionType === 20 && refreshActions) {
+        refreshActions(targetText);
+      }
       isTriggered = true;
     }
 
     if (isTriggered && randomNum > -1 && enableRemoveDuplicatesOnRefresh) {
-      const tempArray = this.state.storedList || listOfDataSource;
+      let tempArray = storedList || listOfDataSource;
       tempArray.splice(randomNum, 1);
       this.setState({
         storedList: tempArray,
@@ -62,20 +76,19 @@ class RandomPicker extends Component {
   };
 
   triggerAction = () => {
-    const { actionSettings } = this.props;
-    if (actionSettings.enableClickRefresh) {
+    const { actionType, listOfDataSource } = this.props;
+    if (actionType === 20) {
       this.setTargetTitleRandomly("onPress");
-    } else if (actionSettings.clickActions) {
-      actionSettings.clickActions(this.state.title);
+    } else if (listOfDataSource) {
+      const { clickActions } = listOfDataSource[randomNum];
+      if (clickActions) {
+        clickActions(this.state.title);
+      }
     }
   };
 
   createPickerView = (viewGenre, viewContainerStyle, viewContentStyle) => {
-    const { previewDemoText, enablePreviewDemoText } = this.props;
-    const defaultPreviewText =
-      enablePreviewDemoText && previewDemoText
-        ? previewDemoText
-        : "Preview demo";
+    const defaultPreviewText = "Preview demo";
     // viewGenre: editor, view, button
     let jsxElem;
     if (viewGenre === "editor") {
@@ -107,13 +120,13 @@ class RandomPicker extends Component {
   render() {
     const {
       styleOptions,
-      actionSettings,
       _width,
       _height,
       editor,
+      listOfDataSource,
     } = this.props;
 
-    this.setTargetTitleRandomly();
+    if (!editor) this.setTargetTitleRandomly();
 
     const styles = {
       viewContainer: {
@@ -138,14 +151,10 @@ class RandomPicker extends Component {
         textTransform: styleOptions.textTransform,
       },
     };
-
     let viewGenre = "view";
     if (editor) {
       viewGenre = "editor";
-    } else if (
-      actionSettings &&
-      (actionSettings.clickActions || actionSettings.enableClickRefresh)
-    ) {
+    } else if (listOfDataSource) {
       viewGenre = "button";
     }
 
