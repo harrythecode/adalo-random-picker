@@ -36,7 +36,6 @@
     {
       "name": "clickActions",
       "displayName": "Click Actions",
-      "helpText": "The actions will be triggered when the component is clicked.",
       "type": "action",
       "role": "listItem",
       "reference": "listOfDataSource",
@@ -53,7 +52,7 @@
     {
       "name": "enableRemoveDuplicatesOnRefresh",
       "displayName": "Remove duplicates?",
-      "helpText": "Remove the item already shown from the list. When you refresh or move to a screen, it will reset all values.",
+      "helpText": "Remove the item already shown from the list. When you refresh or move to a screen, it will reset all values. You cannot trigger any action when there is nothing to show.",
       "type": "boolean",
       "default": false,
       "enabled": {
@@ -75,6 +74,8 @@
       "displayName": "Actions after refresh",
       "helpText": "The actions will be triggered after the component is refreshed.",
       "type": "action",
+      "role": "listItem",
+      "reference": "listOfDataSource",
       "arguments": [
         {
           "type": "text",
@@ -89,7 +90,7 @@
     "childComponents": [
       {
         "name": "styleOptions",
-        "displayName": "Style Options",
+        "displayName": "Styles",
         "props": [
           {
             "name": "textSize",
@@ -115,15 +116,22 @@
             "default": "@contrast:backgroundColor"
           },
           {
-            "name": "enableTextBold",
-            "displayName": "Enable Bold text?",
-            "type": "boolean",
-            "default": true
+            "name": "fontWeight",
+            "displayName": "Font Weight",
+            "type": "text",
+            "default": "bold",
+            "control": {
+              "type": "menu",
+              "options": [
+                { "label": "Bold", "value": "bold" },
+                { "label": "Normal", "value": "normal" },
+                { "label": "Lighter", "value": "lighter" }
+              ]
+            }
           },
           {
             "name": "textPadding",
             "displayName": "Padding",
-            "helpText": "This will set padding inside a border. This will be active regardless of whether the border is visible or not.",
             "type": "number",
             "default": 10,
             "control": {
