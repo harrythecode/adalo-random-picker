@@ -124,8 +124,7 @@
               "type": "menu",
               "options": [
                 { "label": "Bold", "value": "bold" },
-                { "label": "Normal", "value": "normal" },
-                { "label": "Lighter", "value": "lighter" }
+                { "label": "Normal", "value": "normal" }
               ]
             }
           },
