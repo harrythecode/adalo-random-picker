@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 
 class RandomPicker extends Component {
+  globalStoredList;
   state = {
     title: "",
-    storedList: null,
   };
 
   getRandomItem = (listData, maxNum = 0) => {
@@ -22,30 +22,32 @@ class RandomPicker extends Component {
     const {
       introText,
       actionType,
-      refreshActions,
       listOfDataSource,
       enableRemoveDuplicatesOnRefresh,
     } = this.props;
 
-    let randomNum, randomItem, isTriggered;
-    const storedList = this.state.storedList;
+    let isTriggered, targetList;
+    const storedList = this.globalStoredList || listOfDataSource;
 
-    if (!listOfDataSource) return null;
+    // Exit if
+    // No data
+    if (!listOfDataSource || !storedList) return null;
+    // OnLoad && !Init
+    if (eventOrigin === "onLoad" && this.state.title !== "") return null;
 
-    if (enableRemoveDuplicatesOnRefresh && storedList) {
-      const response = this.getRandomItem(storedList, storedList.length);
-      randomItem = response.randomItem;
-      randomNum = response.randomNum;
-    } else if (listOfDataSource.length > 0) {
-      const response = this.getRandomItem(
-        listOfDataSource,
-        listOfDataSource.length
-      );
-      randomItem = response.randomItem;
-      randomNum = response.randomNum;
+    if (enableRemoveDuplicatesOnRefresh) {
+      targetList = storedList;
+    } else {
+      targetList = listOfDataSource;
     }
 
+    const response = this.getRandomItem(targetList, targetList.length);
+    const { randomItem, randomNum } = response;
     const targetText = randomItem || "Not Found";
+
+    // 1. Pick item randomly
+    // 2. Refresh Action
+    // 3. (Uniq) update list
 
     if (eventOrigin === "onLoad") {
       // Initial Loading
@@ -53,25 +55,23 @@ class RandomPicker extends Component {
         const initialText =
           actionType === 20 && introText ? introText : targetText;
         this.setState({ title: initialText });
-        if (actionType === 20 && refreshActions) {
-          refreshActions(initialText);
-        }
         isTriggered = actionType === 20 && introText ? false : true;
       }
     } else {
       this.setState({ title: targetText });
-      if (actionType === 20 && refreshActions) {
-        refreshActions(targetText);
-      }
       isTriggered = true;
     }
 
-    if (isTriggered && randomNum > -1 && enableRemoveDuplicatesOnRefresh) {
-      let tempArray = storedList || listOfDataSource;
-      tempArray.splice(randomNum, 1);
-      this.setState({
-        storedList: tempArray,
-      });
+    if (isTriggered && randomNum > -1) {
+      const { refreshActions } = targetList[randomNum] || "";
+      if (actionType === 20 && refreshActions) {
+        refreshActions(targetText);
+      }
+      if (enableRemoveDuplicatesOnRefresh) {
+        let tempArray = storedList;
+        tempArray.splice(randomNum, 1);
+        this.globalStoredList = tempArray;
+      }
     }
   };
 
@@ -147,7 +147,7 @@ class RandomPicker extends Component {
         color: styleOptions.textColor,
         padding: styleOptions.textPadding,
         fontSize: styleOptions.textSize,
-        fontWeight: styleOptions.enableTextBold ? "bold" : "normal",
+        fontWeight: styleOptions.fontWeight,
         textTransform: styleOptions.textTransform,
       },
     };
