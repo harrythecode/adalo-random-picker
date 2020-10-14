@@ -1,7 +1,7 @@
 {
   "displayName": "Random Picker",
   "defaultWidth": 160,
-  "defaultHeight": 96,
+  "defaultHeight": 45,
   "resizeX": true,
   "resizeY": true,
   "components": "./index.js",
@@ -21,6 +21,12 @@
       "reference": "listOfDataSource"
     },
     {
+      "name": "notFoundText",
+      "displayName": "Not Found Text",
+      "helpText": "Set a default 'Not Found' text when there is no available item in your list. (Default: 'Not Found')",
+      "type": "text"
+    },
+    {
       "name": "actionType",
       "displayName": "What happens when the user clicks on the component?",
       "type": "number",
@@ -29,7 +35,7 @@
         "type": "menu",
         "options": [
           { "label": "Trigger Click Actions", "value": 10 },
-          { "label": "Refresh the component", "value": 20 }
+          { "label": "Pick a new item", "value": 20 }
         ]
       }
     },
@@ -142,7 +148,6 @@
           {
             "name": "textTransform",
             "displayName": "Capitalization",
-            "helpText": "Specify a capitalization in your text. You can see how it looks like: https://www.w3schools.com/cssref/playit.asp?filename=playcss_text-transform",
             "type": "text",
             "default": "none",
             "control": {
@@ -153,17 +158,6 @@
                 { "label": "Uppercase", "value": "uppercase" },
                 { "label": "Lowercase", "value": "lowercase" }
               ]
-            }
-          },
-          {
-            "name": "borderWidth",
-            "displayName": "Border Width",
-            "type": "number",
-            "default": 0,
-            "control": {
-              "type": "slider",
-              "min": 0,
-              "max": 20
             }
           },
           {
@@ -178,15 +172,43 @@
             }
           },
           {
+            "name": "enableShadow",
+            "displayName": "Shadow",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "enableBorderWidth",
+            "displayName": "Border",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "borderWidth",
+            "displayName": "Border Width",
+            "type": "number",
+            "default": 4,
+            "control": {
+              "type": "slider",
+              "min": 1,
+              "max": 20
+            },
+            "enabled": {
+              "enableBorderWidth": true
+            }
+          },
+          {
             "name": "borderColor",
             "displayName": "Border Color",
             "type": "color",
-            "default": "@primary"
+            "default": "@primary",
+            "enabled": {
+              "enableBorderWidth": true
+            }
           },
           {
             "name": "borderStyle",
             "displayName": "Border Style",
-            "helpText": "Specify a border style. You can see how it looks like: https://www.w3schools.com/cssref/playit.asp?filename=playcss_border-style&preval=solid",
             "type": "text",
             "default": "solid",
             "control": {
@@ -194,13 +216,11 @@
               "options": [
                 { "label": "Solid", "value": "solid" },
                 { "label": "Dotted", "value": "dotted" },
-                { "label": "Dashed", "value": "dashed" },
-                { "label": "Double", "value": "double" },
-                { "label": "Groove", "value": "groove" },
-                { "label": "Ridge", "value": "ridge" },
-                { "label": "Inset", "value": "inset" },
-                { "label": "Outset", "value": "outset" }
+                { "label": "Dashed", "value": "dashed" }
               ]
+            },
+            "enabled": {
+              "enableBorderWidth": true
             }
           }
         ]
