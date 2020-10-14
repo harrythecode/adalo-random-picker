@@ -21,6 +21,7 @@ class RandomPicker extends Component {
   setTargetTitleRandomly = (eventOrigin = "onLoad") => {
     const {
       introText,
+      notFoundText,
       actionType,
       listOfDataSource,
       enableRemoveDuplicatesOnRefresh,
@@ -28,6 +29,7 @@ class RandomPicker extends Component {
 
     let isTriggered, targetList;
     const storedList = this.globalStoredList || listOfDataSource;
+    const defaultNotFound = notFoundText || "Not Found";
 
     // Exit if
     // No data
@@ -35,7 +37,7 @@ class RandomPicker extends Component {
     // OnLoad && !Init
     if (eventOrigin === "onLoad" && this.state.title !== "") return null;
 
-    if (enableRemoveDuplicatesOnRefresh) {
+    if (actionType === 20 && enableRemoveDuplicatesOnRefresh) {
       targetList = storedList;
     } else {
       targetList = listOfDataSource;
@@ -43,7 +45,7 @@ class RandomPicker extends Component {
 
     const response = this.getRandomItem(targetList, targetList.length);
     const { randomItem, randomNum } = response;
-    const targetText = randomItem || "Not Found";
+    const targetText = randomItem || defaultNotFound;
 
     // 1. Pick item randomly
     // 2. Refresh Action
@@ -55,7 +57,8 @@ class RandomPicker extends Component {
         const initialText =
           actionType === 20 && introText ? introText : targetText;
         this.setState({ title: initialText });
-        isTriggered = actionType === 20 && introText ? false : true;
+        isTriggered =
+          (actionType === 20 && introText) || actionType === 10 ? false : true;
       }
     } else {
       this.setState({ title: targetText });
@@ -67,28 +70,32 @@ class RandomPicker extends Component {
       if (actionType === 20 && refreshActions) {
         refreshActions(targetText);
       }
-      if (enableRemoveDuplicatesOnRefresh) {
+      if (actionType === 20 && enableRemoveDuplicatesOnRefresh) {
         let tempArray = storedList;
         tempArray.splice(randomNum, 1);
         this.globalStoredList = tempArray;
+      }
+
+      const { clickActions } = targetList[randomNum] || "";
+      if (actionType === 10 && clickActions) {
+        clickActions(targetText);
       }
     }
   };
 
   triggerAction = () => {
-    const { actionType, listOfDataSource } = this.props;
-    if (actionType === 20) {
+    const { listOfDataSource } = this.props;
+    if (listOfDataSource) {
       this.setTargetTitleRandomly("onPress");
-    } else if (listOfDataSource) {
-      const { clickActions } = listOfDataSource[randomNum];
-      if (clickActions) {
-        clickActions(this.state.title);
-      }
     }
   };
 
   createPickerView = (viewGenre, viewContainerStyle, viewContentStyle) => {
-    const defaultPreviewText = "Preview demo";
+    const { notFoundText, listOfDataSource } = this.props;
+    const defaultPreviewText =
+      (listOfDataSource && listOfDataSource[0].itemOfDataSourceList) ||
+      "Preview demo";
+    const defaultNotFound = notFoundText || "Not Found";
     // viewGenre: editor, view, button
     let jsxElem;
     if (viewGenre === "editor") {
@@ -109,7 +116,7 @@ class RandomPicker extends Component {
     } else {
       jsxElem = (
         <View style={viewContainerStyle}>
-          <Text style={viewContentStyle}>{this.state.title}</Text>
+          <Text style={viewContentStyle}>{defaultNotFound}</Text>
         </View>
       );
     }
@@ -128,20 +135,47 @@ class RandomPicker extends Component {
 
     if (!editor) this.setTargetTitleRandomly();
 
-    const styles = {
-      viewContainer: {
-        width: _width,
-        height: _height,
-        display: "flex",
-        alignItems: "center",
-        wordBreak: "break-all",
-        justifyContent: "center",
-        borderWidth: styleOptions.borderWidth,
-        borderColor: styleOptions.borderColor,
-        borderStyle: styleOptions.borderStyle,
-        borderRadius: styleOptions.borderRadius,
-        backgroundColor: styleOptions.backgroundColor,
+    const containerStyle = {
+      width: _width,
+      height: _height,
+      display: "flex",
+      alignItems: "center",
+      wordBreak: "break-all",
+      justifyContent: "center",
+      borderWidth: styleOptions.enableBorderWidth
+        ? styleOptions.borderWidth
+        : 0,
+      borderColor: styleOptions.enableBorderWidth
+        ? styleOptions.borderColor
+        : null,
+      borderStyle: styleOptions.enableBorderWidth
+        ? styleOptions.borderStyle
+        : null,
+      borderRadius: styleOptions.enableBorderWidth
+        ? styleOptions.borderRadius
+        : 0,
+      backgroundColor: styleOptions.backgroundColor,
+    };
+
+    // https://ethercreative.github.io/react-native-shadow-generator/
+    const shadowStyle = {
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 3,
       },
+      shadowOpacity: 0.27,
+      shadowRadius: 4.65,
+
+      elevation: 6,
+    };
+
+    const targetContainerStyle = styleOptions.enableShadow
+      ? Object.assign(containerStyle, shadowStyle)
+      : containerStyle;
+
+    const styles = {
+      viewContainer: targetContainerStyle,
       viewContent: {
         alignSelf: "center",
         color: styleOptions.textColor,
