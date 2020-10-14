@@ -57,7 +57,8 @@ class RandomPicker extends Component {
         const initialText =
           actionType === 20 && introText ? introText : targetText;
         this.setState({ title: initialText });
-        isTriggered = (actionType === 20 && introText) || actionType === 10 ? false : true;
+        isTriggered =
+          (actionType === 20 && introText) || actionType === 10 ? false : true;
       }
     } else {
       this.setState({ title: targetText });
@@ -78,7 +79,6 @@ class RandomPicker extends Component {
       const { clickActions } = targetList[randomNum] || "";
       if (actionType === 10 && clickActions) {
         clickActions(targetText);
-        console.log("isTriggered")
       }
     }
   };
@@ -92,8 +92,9 @@ class RandomPicker extends Component {
 
   createPickerView = (viewGenre, viewContainerStyle, viewContentStyle) => {
     const { notFoundText, listOfDataSource } = this.props;
-    console.log(this.props)
-    const defaultPreviewText = listOfDataSource && listOfDataSource[0].itemOfDataSourceList || "Preview demo";
+    const defaultPreviewText =
+      (listOfDataSource && listOfDataSource[0].itemOfDataSourceList) ||
+      "Preview demo";
     const defaultNotFound = notFoundText || "Not Found";
     // viewGenre: editor, view, button
     let jsxElem;
@@ -141,12 +142,20 @@ class RandomPicker extends Component {
       alignItems: "center",
       wordBreak: "break-all",
       justifyContent: "center",
-      borderWidth: styleOptions.enableBorderWidth ? styleOptions.borderWidth : 0,
-      borderColor: styleOptions.enableBorderWidth ? styleOptions.borderColor : null,
-      borderStyle: styleOptions.enableBorderWidth ? styleOptions.borderStyle : null,
-      borderRadius: styleOptions.enableBorderWidth ? styleOptions.borderRadius : 0,
+      borderWidth: styleOptions.enableBorderWidth
+        ? styleOptions.borderWidth
+        : 0,
+      borderColor: styleOptions.enableBorderWidth
+        ? styleOptions.borderColor
+        : null,
+      borderStyle: styleOptions.enableBorderWidth
+        ? styleOptions.borderStyle
+        : null,
+      borderRadius: styleOptions.enableBorderWidth
+        ? styleOptions.borderRadius
+        : 0,
       backgroundColor: styleOptions.backgroundColor,
-    }
+    };
 
     // https://ethercreative.github.io/react-native-shadow-generator/
     const shadowStyle = {
@@ -157,11 +166,13 @@ class RandomPicker extends Component {
       },
       shadowOpacity: 0.27,
       shadowRadius: 4.65,
-      
-      elevation: 6,
-    }
 
-    const targetContainerStyle = styleOptions.enableShadow ? Object.assign(containerStyle, shadowStyle) : containerStyle;
+      elevation: 6,
+    };
+
+    const targetContainerStyle = styleOptions.enableShadow
+      ? Object.assign(containerStyle, shadowStyle)
+      : containerStyle;
 
     const styles = {
       viewContainer: targetContainerStyle,
