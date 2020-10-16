@@ -68,9 +68,8 @@
     {
       "name": "introText",
       "displayName": "Intro Text",
-      "helpText": "Set an intro message on the component before clicking. You can skip this message if you leave it as empty.",
+      "helpText": "Set an intro message on the component before clicking. (Default: Click To Start)",
       "type": "text",
-      "default": "Click to Start!",
       "enabled": {
         "actionType": 20
       }
@@ -175,7 +174,7 @@
             "name": "enableShadow",
             "displayName": "Shadow",
             "type": "boolean",
-            "default": false
+            "default": true
           },
           {
             "name": "enableBorderWidth",
