@@ -3,15 +3,22 @@ import { Text, View, TouchableOpacity } from "react-native";
 
 class RandomPicker extends Component {
   globalStoredList;
+  isRunOnce = false;
   state = {
     title: "",
+    randomNum: 0,
   };
+
+  componentDidMount() {
+    this.isRunOnce = false;
+  }
 
   getRandomItem = (listData, maxNum = 0) => {
     let res = { randomItem: "", randomNum: 0 };
     if (listData.length > 0) {
       const randomNum = Math.floor(Math.random() * maxNum);
       const pickedItem = listData[randomNum].itemOfDataSourceList;
+      this.setState({ randomNum: randomNum });
       res = { randomItem: pickedItem, randomNum: randomNum };
     }
 
@@ -30,6 +37,7 @@ class RandomPicker extends Component {
     let isTriggered, targetList;
     const storedList = this.globalStoredList || listOfDataSource;
     const defaultNotFound = notFoundText || "Not Found";
+    const defaultIntroText = introText || "Click To Start";
 
     // Exit if
     // No data
@@ -53,12 +61,10 @@ class RandomPicker extends Component {
 
     if (eventOrigin === "onLoad") {
       // Initial Loading
-      if (this.state.title === "") {
-        const initialText =
-          actionType === 20 && introText ? introText : targetText;
+      if (this.state.title === "" || this.isRunOnce === false) {
+        const initialText = actionType === 20 ? defaultIntroText : targetText;
         this.setState({ title: initialText });
-        isTriggered =
-          (actionType === 20 && introText) || actionType === 10 ? false : true;
+        isTriggered = actionType === 20 || actionType === 10 ? false : true;
       }
     } else {
       this.setState({ title: targetText });
@@ -67,26 +73,33 @@ class RandomPicker extends Component {
 
     if (isTriggered && randomNum > -1) {
       const { refreshActions } = targetList[randomNum] || "";
-      if (actionType === 20 && refreshActions) {
-        refreshActions(targetText);
-      }
-      if (actionType === 20 && enableRemoveDuplicatesOnRefresh) {
+      if (actionType === 20)
+        if (refreshActions) {
+          refreshActions(targetText);
+        }
+
+      if (enableRemoveDuplicatesOnRefresh) {
         let tempArray = storedList;
         tempArray.splice(randomNum, 1);
         this.globalStoredList = tempArray;
       }
-
-      const { clickActions } = targetList[randomNum] || "";
-      if (actionType === 10 && clickActions) {
-        clickActions(targetText);
-      }
+      this.isRunOnce = true;
     }
   };
 
   triggerAction = () => {
-    const { listOfDataSource } = this.props;
+    const { listOfDataSource, actionType } = this.props;
     if (listOfDataSource) {
-      this.setTargetTitleRandomly("onPress");
+      // Click Action
+      if (actionType == 10) {
+        const { clickActions } = listOfDataSource[this.state.randomNum] || "";
+        clickActions(this.state.title);
+      }
+
+      // Refresh Action
+      if (actionType === 20) {
+        this.setTargetTitleRandomly("onPress");
+      }
     }
   };
 
@@ -95,7 +108,6 @@ class RandomPicker extends Component {
     const defaultPreviewText =
       (listOfDataSource && listOfDataSource[0].itemOfDataSourceList) ||
       "Preview demo";
-    const defaultNotFound = notFoundText || "Not Found";
     // viewGenre: editor, view, button
     let jsxElem;
     if (viewGenre === "editor") {
@@ -116,7 +128,7 @@ class RandomPicker extends Component {
     } else {
       jsxElem = (
         <View style={viewContainerStyle}>
-          <Text style={viewContentStyle}>{defaultNotFound}</Text>
+          <Text style={viewContentStyle}>{this.state.title}</Text>
         </View>
       );
     }
@@ -134,7 +146,6 @@ class RandomPicker extends Component {
     } = this.props;
 
     if (!editor) this.setTargetTitleRandomly();
-
     const containerStyle = {
       width: _width,
       height: _height,
