@@ -93,7 +93,7 @@ class RandomPicker extends Component {
       // Click Action
       if (actionType == 10) {
         const { clickActions } = listOfDataSource[this.state.randomNum] || "";
-        clickActions(this.state.title);
+        if (clickActions) clickActions(this.state.title);
       }
 
       // Refresh Action
@@ -104,9 +104,11 @@ class RandomPicker extends Component {
   };
 
   createPickerView = (viewGenre, viewContainerStyle, viewContentStyle) => {
-    const { notFoundText, listOfDataSource } = this.props;
+    const { actionType, listOfDataSource } = this.props;
     const defaultPreviewText =
-      (listOfDataSource && listOfDataSource[0].itemOfDataSourceList) ||
+      (listOfDataSource &&
+        listOfDataSource.length > 0 &&
+        listOfDataSource[0].itemOfDataSourceList) ||
       "Preview demo";
     // viewGenre: editor, view, button
     let jsxElem;
@@ -121,6 +123,7 @@ class RandomPicker extends Component {
         <TouchableOpacity
           style={viewContainerStyle}
           onPress={this.triggerAction}
+          key={actionType}
         >
           <Text style={viewContentStyle}>{this.state.title}</Text>
         </TouchableOpacity>
@@ -162,9 +165,7 @@ class RandomPicker extends Component {
       borderStyle: styleOptions.enableBorderWidth
         ? styleOptions.borderStyle
         : null,
-      borderRadius: styleOptions.enableBorderWidth
-        ? styleOptions.borderRadius
-        : 0,
+      borderRadius: styleOptions.borderRadius,
       backgroundColor: styleOptions.backgroundColor,
     };
 
