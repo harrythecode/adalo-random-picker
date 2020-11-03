@@ -72,23 +72,30 @@ class RandomPicker extends Component {
     }
 
     if (isTriggered && randomNum > -1) {
-      const { refreshActions } = targetList[randomNum] || "";
-      if (actionType === 20)
+      this.isRunOnce = true;
+
+      if (actionType === 20) {
+        const { refreshActions } = targetList[randomNum] || "";
+        const { refreshActionsOnEnd } = this.props;
+
         if (refreshActions) {
           refreshActions(targetText);
         }
 
-      if (enableRemoveDuplicatesOnRefresh) {
-        let tempArray = storedList;
-        tempArray.splice(randomNum, 1);
-        this.globalStoredList = tempArray;
+        if (enableRemoveDuplicatesOnRefresh) {
+          if (storedList && storedList.length === 0) {
+            if (refreshActionsOnEnd) refreshActionsOnEnd();
+          }
+          let tempArray = storedList;
+          tempArray.splice(randomNum, 1);
+          this.globalStoredList = tempArray;
+        }
       }
-      this.isRunOnce = true;
     }
   };
 
   triggerAction = () => {
-    const { listOfDataSource, actionType } = this.props;
+    const { listOfDataSource, actionType, refreshActionsOnEnd } = this.props;
     if (listOfDataSource) {
       // Click Action
       if (actionType == 10) {

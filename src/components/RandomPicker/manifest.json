@@ -66,6 +66,16 @@
       }
     },
     {
+      "name": "refreshActionsOnEnd",
+      "displayName": "Finished Actions",
+      "helpText": "The actions will be triggered after no item is available.",
+      "type": "action",
+      "enabled": {
+        "actionType": 20,
+        "enableRemoveDuplicatesOnRefresh": true
+      }
+    },
+    {
       "name": "introText",
       "displayName": "Intro Text",
       "helpText": "Set an intro message on the component before clicking. (Default: Click To Start)",
