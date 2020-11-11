@@ -67,8 +67,8 @@
     },
     {
       "name": "refreshActionsOnEnd",
-      "displayName": "Finished Actions",
-      "helpText": "The actions will be triggered after no item is available.",
+      "displayName": "Actions on Finish",
+      "helpText": "The actions will be triggered when the user refreshes and there are no items left.",
       "type": "action",
       "enabled": {
         "actionType": 20,
